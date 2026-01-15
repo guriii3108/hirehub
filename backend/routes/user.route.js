@@ -8,6 +8,6 @@ const route = Router();
 route.post("/register", register);
 route.post("/login", login);
 route.post("/logout", isAuthenticated ,logout);
-route.put("/update/:id", isAuthenticated ,updateProfile);
+route.put("/update", isAuthenticated ,updateProfile);
 
 export default route;

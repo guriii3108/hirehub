@@ -136,20 +136,11 @@ export const logout = async (req, res) => {
 export const updateProfile = async(req,res)=>{
   try {
     const {fullName,email,phoneNumber,bio,skills} = req.body;
-    const file = req.file;
+    // const file = req.file;
 
-    if(!fullName || !email || !phoneNumber || !bio || !skills){
-      return res.status(400).json({
-        message: "Something is Missing",
-        success: false,
-      });
-    }
 
     //handle file upload -- like cloudinary and all later...
 
-
-    //skills in string so we have to convert it into array
-    const skillsArray  = skills.split(",");
 
     //user must authenticated if they wanna update profile
     const userId = req.id; //middleware authentication(later)
@@ -163,9 +154,15 @@ export const updateProfile = async(req,res)=>{
     }
 
     //updatinggg the user table here
-    user.fullName = fullName;
-    user.email = email;
-    user.phoneNumber = phoneNumber;
+    if(fullName){
+      user.fullName = fullName;
+    }
+    if(email){
+      user.email = email;
+    }
+    if(phoneNumber){
+      user.phoneNumber = phoneNumber;
+    }
 
     await user.save(); //save changes
 
@@ -178,8 +175,14 @@ export const updateProfile = async(req,res)=>{
       });
     }
     if(profile){
-      profile.bio = bio;
-      profile.skills = skillsArray;
+      if(bio){
+        profile.bio = bio;
+      }
+      if(skills){
+        profile.skills = skills.split(",");
+        //skills in string so we have to convert it into array
+      }
+      
       //resume and profile picture will be handled later
 
       await profile.save();
