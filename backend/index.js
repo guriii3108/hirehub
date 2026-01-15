@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import connectDB from "./utils/dbConnect.js";
 
 dotenv.config();
 const app = express();
@@ -22,5 +23,6 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
+    connectDB();
     console.log(`Server is running on port ${PORT}`);
 });
