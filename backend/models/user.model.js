@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Profile" // ref is the name of the model
   }
-})
+},{timestamps: true})
 
 const User = mongoose.model("User", userSchema);
 export default User;
