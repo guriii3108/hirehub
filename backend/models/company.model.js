@@ -4,7 +4,8 @@ const companySchema = new mongoose.Schema({
   name:{
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    unique: true,
   },
   description:{
     type: String,
@@ -13,7 +14,7 @@ const companySchema = new mongoose.Schema({
   logo:{
     type: String, //cloudinary url
   },
-  createdBy:{ //admin who created the company
+  userId:{ //admin who created the company
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
