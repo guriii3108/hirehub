@@ -66,3 +66,54 @@ export const getAllJobs = async(req,res)=>{
     })
   }
 }
+
+//get single job(byId) ....  for user
+const getJobById = async(req,res)=>{
+  try {
+    const jobId = req.params.id;
+    const job = await Job.findById(jobId);
+    if(!job){
+      return res.status(404).json({
+        message:"Job not found",
+        success:false,
+      })
+    }
+    return res.status(200).json({
+      message:"Job found",
+      success:true,
+      job,
+    })
+    
+  } catch (error) {
+    return res.status(500).json({
+      message:error.message,
+      success:false,
+    })
+  }
+}
+
+//get job .. for admin
+const getAdminJobs = async(req,res)=>{
+  try {
+    const adminId = req.id;
+    const jobs = await Job.find({createdBy:adminId});
+    if(!jobs){
+      return res.status(404).json({
+        message:"No jobs found",
+        success:false,
+      })
+    }
+    return res.status(200).json({
+      message:"All jobs",
+      success:true,
+      jobs,
+    })
+    
+    
+  } catch (error) {
+    return res.status(500).json({
+      message:error.message,
+      success:false,
+    })
+  }
+}
