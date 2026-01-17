@@ -11,7 +11,16 @@ const jobSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  requirements:{
+    type: [String],
+    required: true,
+    trim: true
+  },
   salary:{
+    type: Number,
+    required: true,
+  },
+  experience:{
     type: Number,
     required: true,
   },
@@ -20,7 +29,7 @@ const jobSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  jobType:{
+  jobType:{ //full time, part time, contract
     type: String,
     required: true,
     trim: true
@@ -28,11 +37,6 @@ const jobSchema = new mongoose.Schema({
   position:{
     type:Number,
     required: true,
-  },
-  skills:{
-    type: [String],
-    required: true,
-    trim: true
   },
   company:{ 
     type: mongoose.Schema.Types.ObjectId,
