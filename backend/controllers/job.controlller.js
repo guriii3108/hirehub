@@ -68,7 +68,7 @@ export const getAllJobs = async(req,res)=>{
 }
 
 //get single job(byId) ....  for user
-const getJobById = async(req,res)=>{
+export const getJobById = async(req,res)=>{
   try {
     const jobId = req.params.id;
     const job = await Job.findById(jobId);
@@ -93,7 +93,7 @@ const getJobById = async(req,res)=>{
 }
 
 //get job .. for admin
-const getAdminJobs = async(req,res)=>{
+export const getAdminJobs = async(req,res)=>{
   try {
     const adminId = req.id;
     const jobs = await Job.find({createdBy:adminId});
