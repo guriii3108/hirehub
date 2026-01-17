@@ -34,3 +34,35 @@ export const postJob = async(req,res)=>{
     })
   }
 }  
+
+//to see all jobs
+export const getAllJobs = async(req,res)=>{
+  try {
+    //with filtering(query parameters)
+    const keyword = req.query.keyword || "";
+    const queryObject = {
+      $or:[
+        {title:{$regex:keyword,$options:"i"}}, //i means case insensitive
+        {description:{$regex:keyword,$options:"i"}},
+        {requirements:{$regex:keyword,$options:"i"}},
+      ]
+    };
+    const jobs = await Job.find(queryObject);
+    if(!jobs){
+      return res.status(404).json({
+        message:"No jobs found",
+        success:false,
+      })
+    }
+    return res.status(200).json({
+      message:"All jobs",
+      success:true,
+      jobs,
+    })
+  } catch (error) {
+    return res.status(500).json({
+      message:error.message,
+      success:false,
+    })
+  }
+}
