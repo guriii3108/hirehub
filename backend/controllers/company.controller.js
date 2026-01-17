@@ -86,7 +86,7 @@ export const getCompanyById = async(req,res)=>{
 export const updateCompany = async(req,res)=>{
   try {
     const {name,description,website,location} = req.body;
-    const {id} = req.id; //from auth middleware
+    const {id} = req.params; //from auth middleware
 
     // const file = req.file; //for logo
     //handle file upload later
