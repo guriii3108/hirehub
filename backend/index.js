@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./utils/dbConnect.js";
 import userRoute from "./routes/user.route.js";
 import companyRoute from "./routes/company.route.js";
+import jobRoute from "./routes/job.route.js";
 
 dotenv.config();
 const app = express();
@@ -23,6 +24,7 @@ app.use(cookieParser());
 //v1.. v2.. and on soo on .. it's called versioning for future.. if we make changes in api we can create new version
 app.use("/api/v1/user",userRoute); //user routes
 app.use("/api/v1/company",companyRoute); //company routes
+app.use("/api/v1/job",jobRoute); //job routes
 
 app.listen(PORT, () => {
     connectDB();
