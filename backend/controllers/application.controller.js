@@ -52,3 +52,27 @@ export const applyJob = async (req, res) => {
         });
     }
 };
+
+export const getAppliedJobs = async(req,res)=>{
+  try {
+    const {userId} = req.id;
+    const applications = await Application.find({applicant:userId}).populate("job").sort({createdAt:-1});
+    if(!applications){
+      return res.status(404).json({
+        success:false,
+        message:"No applications found",
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      message:"Applied jobs fetched successfully",
+      data:applications
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success:false,
+      message:error.message
+    }) 
+  }
+}
+
