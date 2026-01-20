@@ -18,6 +18,9 @@ const Signup = () => {
   const changeEventHandler = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   }
+  const changeFileHandler = (e) => {
+    setData({ ...data, file: e.target.files?.[0] });
+  }
 
   const selectRole = (role) => {
     setData({ ...data, role });
@@ -27,6 +30,15 @@ const Signup = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     console.log(data);
+    setData({
+      name: "",
+      email: "",
+      phoneNumber: "",
+      password: "",
+      role: "",
+      file: ""
+    });
+    
   }
 
   return (
@@ -63,6 +75,17 @@ const Signup = () => {
                 className='w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all text-sm placeholder:text-gray-400'
               />
             </div>
+            <div className='space-y-1.5'>
+              <label className='text-sm font-medium text-gray-700'>Phone Number</label>
+              <input
+                type="text"
+                value={data.phoneNumber}
+                name="phoneNumber"
+                onChange={changeEventHandler}
+                placeholder="1234567890"
+                className='w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all text-sm placeholder:text-gray-400'
+              />
+            </div>
 
             <div className='space-y-1.5'>
               <label className='text-sm font-medium text-gray-700'>Password</label>
@@ -82,7 +105,7 @@ const Signup = () => {
                 accept='image/*'
                 type="file"
                 name="file"
-                onChange={changeEventHandler}
+                onChange={changeFileHandler}
               />
             </div>
 
