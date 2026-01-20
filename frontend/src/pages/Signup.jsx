@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ChevronDown, Check } from 'lucide-react'
+import axios from 'axios'
+import { USER_API_ENDPOINT } from '../utils/constant.js'
+import { showError, showSuccess } from '../utils/toast.js'
+
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -27,17 +32,42 @@ const Signup = () => {
     setIsDropdownOpen(false);
   }
 
-  const submitHandler = (e) => {
+  const submitHandler = async(e) => {
     e.preventDefault();
-    console.log(data);
-    setData({
-      name: "",
-      email: "",
-      phoneNumber: "",
-      password: "",
-      role: "",
-      file: ""
-    });
+    const formData = new FormData(); //because we are sending file also
+    formData.append("fullName", data.name);
+    formData.append("email", data.email);
+    formData.append("phoneNumber", data.phoneNumber);
+    formData.append("password", data.password);
+    formData.append("role", data.role==="Job Seeker" ? "jobseeker" : "recruiter");
+    if(data.file){
+      formData.append("file", data.file);
+    }
+
+    try {
+      const response = await axios.post(`${USER_API_ENDPOINT}/register`, formData,{
+        headers:{
+          "Content-Type": "multipart/form-data"
+        },
+        withCredentials: true
+      });
+      console.log(response);
+      if(response.data.success){
+        showSuccess(response.data.message);
+        navigate("/login");
+        setData({
+          name: "",
+          email: "",
+          phoneNumber: "",
+          password: "",
+          role: "",
+          file: ""
+        });
+      }
+    } catch (error) {
+      console.log(error.response.data);
+      showError(error.response.data.message);
+    }
     
   }
 

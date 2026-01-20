@@ -30,11 +30,11 @@ export const register = async (req, res) => {
         });
         //profile.model.js -- because of refrence not embedding..(created empty refrence and linked .. hehe)
         const newProfile = await Profile.create({
-          user: newUser._id,
-          bio:"",
-          skills:[],
-          //later we add fields like resume, profile pic and all
-        })
+            user: newUser._id,
+            bio: "",
+            skills: [],
+            //later we add fields like resume, profile pic and all
+        });
 
         //linking the user and profile on basis of id...
         newUser.profile = newProfile._id;
@@ -133,75 +133,71 @@ export const logout = async (req, res) => {
     }
 };
 
-export const updateProfile = async(req,res)=>{
-  try {
-    const {fullName,email,phoneNumber,bio,skills} = req.body;
-    // const file = req.file;
+export const updateProfile = async (req, res) => {
+    try {
+        const { fullName, email, phoneNumber, bio, skills } = req.body;
+        // const file = req.file;
 
+        //handle file upload -- like cloudinary and all later...
 
-    //handle file upload -- like cloudinary and all later...
+        //user must authenticated if they wanna update profile
+        const userId = req.id; //middleware authentication(later)
 
+        let user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                success: false,
+            });
+        }
 
-    //user must authenticated if they wanna update profile
-    const userId = req.id; //middleware authentication(later)
+        //updatinggg the user table here
+        if (fullName) {
+            user.fullName = fullName;
+        }
+        if (email) {
+            user.email = email;
+        }
+        if (phoneNumber) {
+            user.phoneNumber = phoneNumber;
+        }
 
-    let user = await User.findById(userId);
-    if(!user){
-      return res.status(404).json({
-        message: "User not found",
-        success: false,
-      });
+        await user.save(); //save changes
+
+        //updatinggg the profile table here
+        let profile = await Profile.findOne({ user: userId });
+        if (!profile) {
+            return res.status(404).json({
+                message: "Profile not found",
+                success: false,
+            });
+        }
+        if (profile) {
+            if (bio) {
+                profile.bio = bio;
+            }
+            if (skills) {
+                profile.skills = skills.split(",");
+                //skills in string so we have to convert it into array
+            }
+
+            //resume and profile picture will be handled later
+
+            await profile.save();
+        }
+
+        //refetch the user with updated profile
+        user = await User.findById(userId).populate("profile");
+
+        return res.status(200).json({
+            message: "Profile updated successfully",
+            success: true,
+            user,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message,
+            success: false,
+        });
     }
-
-    //updatinggg the user table here
-    if(fullName){
-      user.fullName = fullName;
-    }
-    if(email){
-      user.email = email;
-    }
-    if(phoneNumber){
-      user.phoneNumber = phoneNumber;
-    }
-
-    await user.save(); //save changes
-
-    //updatinggg the profile table here
-    let profile = await Profile.findOne({user: userId});
-    if(!profile){
-      return res.status(404).json({
-        message: "Profile not found",
-        success: false,
-      });
-    }
-    if(profile){
-      if(bio){
-        profile.bio = bio;
-      }
-      if(skills){
-        profile.skills = skills.split(",");
-        //skills in string so we have to convert it into array
-      }
-      
-      //resume and profile picture will be handled later
-
-      await profile.save();
-    }
-
-    //refetch the user with updated profile
-    user = await User.findById(userId).populate("profile");
-
-    return res.status(200).json({
-      message: "Profile updated successfully",
-      success: true,
-      user,
-    });
-
-
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-      success: false,
-    });
-  }
-}
+};

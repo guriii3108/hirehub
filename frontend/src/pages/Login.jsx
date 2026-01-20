@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ChevronDown, Check } from 'lucide-react'
+import { showError, showSuccess } from '../utils/toast'
+import axios from 'axios'
+import { USER_API_ENDPOINT } from '../utils/constant'
 
 const Login = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -21,14 +25,33 @@ const Login = () => {
     setIsDropdownOpen(false);
   }
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(data);
-    setData({
-      email: "",
-      password: "",
-      role: "",
-    });
+    const inputData = {
+      ...data,
+      role: data.role ==="Job Seeker" ? "jobseeker" : "recruiter"
+    }
+    try {
+      const response = await axios.post(`${USER_API_ENDPOINT}/login`,inputData,{
+        headers:{
+          "Content-Type": "application/json"
+        },
+        withCredentials: true
+      });
+      if(response.data.success){
+        setTimeout(() => {
+          showSuccess(response.data.message);
+          setData({
+          email: "",
+          password: "",
+          role: "",
+        });
+          navigate("/");
+        }, 1000);
+      }
+    } catch (error) {
+      showError(error.response.data.message);
+    }
   }
 
   return (
