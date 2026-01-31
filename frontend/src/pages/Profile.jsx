@@ -9,10 +9,12 @@ import {
   Download, ExternalLink,
   Upload
 } from 'lucide-react'
+import UpdateProfileDialouge from '../components/UpdateProfileDialouge'
 
 const Profile = () => {
   const { user } = useSelector((store) => store.auth);
   const [activeTab, setActiveTab] = useState('overview');
+  const [isEditing, setIsEditing] = useState(false);
 
   // Placeholder data tailored for a job portal
   const skills = [
@@ -113,7 +115,7 @@ const Profile = () => {
                   </div>
                 </div>
 
-                <button className='w-full mt-8 bg-black text-white py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2'>
+                <button onClick={() => setIsEditing(true)} className='w-full mt-8 bg-black text-white py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2'>
                   <Edit3 size={16} />
                   Edit Profile
                 </button>
@@ -270,6 +272,9 @@ const Profile = () => {
           </section>
         </div>
       </main>
+
+      {/* Update Profile Dialouge(popup) */}
+      <UpdateProfileDialouge open={isEditing} setOpen={setIsEditing} />
 
       <Footer />
     </div>
