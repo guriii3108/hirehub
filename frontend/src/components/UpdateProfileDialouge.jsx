@@ -1,18 +1,25 @@
 import React, { useState } from 'react'
 import { X, Loader2, Upload } from 'lucide-react'
 import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { setUser } from '../redux/authSlice';
+import { useDispatch } from 'react-redux';
+import { USER_API_ENDPOINT } from '../utils/constant';
+import { showError, showSuccess } from '../utils/toast';
 
 const UpdateProfileDialouge = ({ open, setOpen }) => {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const { user } = useSelector(store => store.auth);
 
   // Mock user data from what would be available
   const [input, setInput] = useState({
-    fullname: "Guriii",
-    email: "guriii@example.com",
-    phoneNumber: "+1 234 567 890",
-    bio: "I am a passionate Full Stack Developer with experience in building scalable web applications. I love working with React, Node.js, and modern CSS frameworks.",
-    skills: "React, Node.js, Tailwind CSS, MongoDB, TypeScript",
-    file: null
+    fullName: user?.fullName,
+    email: user?.email,
+    phoneNumber: user?.phoneNumber,
+    bio: user?.bio,
+    skills: user?.skills?.map((skill) => skill),
+    file: user?.profile?.resume
   });
 
   const changeEventHandler = (e) => {
@@ -24,10 +31,33 @@ const UpdateProfileDialouge = ({ open, setOpen }) => {
     setInput({ ...input, file: file });
   }
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
     // Dispatch update action here
+    const formData = new FormData();
+    formData.append("fullName", input.fullName);
+    formData.append("email", input.email);
+    formData.append("phoneNumber", input.phoneNumber);
+    formData.append("bio", input.bio);
+    formData.append("skills", input.skills);
+    if(input.file){
+      formData.append("file", input.file);
+    }
+    try {
+      const response = await axios.put(`${USER_API_ENDPOINT}/update`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+      if(response.data.success){
+        dispatch(setUser(response.data.user));
+        showSuccess(response?.data?.message);
+      }
+    } catch (error) {
+        showError(error?.response?.data?.message || "Something went wrong");
+    }
     setTimeout(() => {
       setLoading(false);
       setOpen(false);
@@ -57,12 +87,12 @@ const UpdateProfileDialouge = ({ open, setOpen }) => {
 
             {/* Full Name */}
             <div className='space-y-1.5'>
-              <label htmlFor="fullname" className='text-sm font-medium text-gray-700'>Full Name</label>
+              <label htmlFor="fullName" className='text-sm font-medium text-gray-700'>Full Name</label>
               <input
                 type="text"
-                id="fullname"
-                name="fullname"
-                value={input.fullname}
+                id="fullName"
+                name="fullName"
+                value={input.fullName}
                 onChange={changeEventHandler}
                 className='w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-black focus:ring-1 focus:ring-black outline-none transition-all bg-gray-50/50'
                 placeholder="Enter your full name"
