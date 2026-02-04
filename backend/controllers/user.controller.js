@@ -2,6 +2,8 @@ import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import Profile from "../models/profile.model.js";
 import bcrypt from "bcrypt";
+import getDataUri from "../utils/dataUri.js";
+import cloudinary from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
     try {
@@ -136,9 +138,15 @@ export const logout = async (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         const { fullName, email, phoneNumber, bio, skills } = req.body;
-        const file = req.file;
 
-        //handle file upload -- like cloudinary and all later...
+        const file = req.file; //handle file upload -- like cloudinary and all later...
+        const fileUri = getDataUri(file);
+        const cloudinaryResponse = await cloudinary.uploader.upload(fileUri.content,{
+            resource_type: "raw",
+            // format: "pdf",
+            public_id: `${file.originalname.split('.')[0]}_${Date.now()}.pdf`, //this line because Cloudinary forces PDFs uploaded as "images" to download automatically for security reasons
+        });      
+
 
         //user must authenticated if they wanna update profile
         const userId = req.id; //middleware authentication(later)
@@ -181,13 +189,17 @@ export const updateProfile = async (req, res) => {
                 //skills in string so we have to convert it into array
             }
 
-            //resume and profile picture will be handled later
-
+            //resume and profile picture will be handled here
+            if(cloudinaryResponse){
+                profile.resume = cloudinaryResponse.secure_url; //cloudinary URL
+                profile.resumeOriginalName = file.originalname; //save original name
+            }
             await profile.save();
         }
 
         //refetch the user with updated profile
         user = await User.findById(userId).populate("profile");
+        console.log(user);
 
         return res.status(200).json({
             message: "Profile updated successfully",

@@ -123,7 +123,7 @@ const Profile = () => {
             </div>
 
             {/* Resume Widget */}
-            {user?.resume ? (
+            {user?.profile?.resume ? (
               <div className='bg-white rounded-2xl shadow-sm border border-gray-100 p-6'>
               <h3 className='font-bold text-gray-900 mb-4 flex items-center gap-2'>
                 <FileText className='text-blue-600' size={20} />
@@ -131,12 +131,12 @@ const Profile = () => {
               </h3>
               <div className='p-4 border border-gray-200 rounded-xl bg-gray-50/50'>
                 <div className='flex items-center justify-between mb-2'>
-                  <span className='font-medium text-sm text-gray-700'>My-Resume-2024.pdf</span>
+                  <span className='font-medium text-sm text-gray-700'>{user?.profile?.resumeOriginalName}</span>
                   <span className='text-xs text-green-600 font-medium px-2 py-0.5 bg-green-50 rounded-full'>Active</span>
                 </div>
                 <p className='text-xs text-gray-500 mb-4'>Last updated: 2 days ago</p>
                 <div className='flex gap-2'>
-                  <a target='_blank' href="https://www.google.com/" className='flex-1 bg-white border border-gray-200 text-gray-700 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2'>
+                  <a target='_blank' href={user?.profile?.resume} className='flex-1 bg-white border border-gray-200 text-gray-700 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2'>
                     <ExternalLink size={14} /> View
                   </a>
                   <button className='flex-1 bg-blue-600 text-white py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2'>
