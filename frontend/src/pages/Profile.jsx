@@ -269,9 +269,7 @@ const Profile = () => {
                 <button className='text-gray-400 hover:text-black'><Edit3 size={16} /></button>
               </div>
               <p className='text-gray-600 leading-relaxed text-sm'>
-                I am a passionate Full Stack Developer with experience in building scalable web applications.
-                I love working with React, Node.js, and modern CSS frameworks. I am currently looking for new opportunities
-                where I can contribute to the team's success while learning new technologies.
+                {user?.profile?.bio || "No bio added"}
               </p>
             </div>
 

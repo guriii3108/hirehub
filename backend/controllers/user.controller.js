@@ -173,8 +173,8 @@ export const updateProfile = async (req, res) => {
             });
         }
         if (profile) {
-            if (bio) {
-                profile.bio = bio;
+            if (bio !==undefined) {
+                profile.bio = bio || "";
             }
             if (skills !==undefined) {
                 profile.skills = skills ?  skills.split(",") : [];
