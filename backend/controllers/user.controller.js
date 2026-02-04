@@ -136,7 +136,7 @@ export const logout = async (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         const { fullName, email, phoneNumber, bio, skills } = req.body;
-        // const file = req.file;
+        const file = req.file;
 
         //handle file upload -- like cloudinary and all later...
 
@@ -176,8 +176,8 @@ export const updateProfile = async (req, res) => {
             if (bio) {
                 profile.bio = bio;
             }
-            if (skills) {
-                profile.skills = skills.split(",");
+            if (skills !==undefined) {
+                profile.skills = skills ?  skills.split(",") : [];
                 //skills in string so we have to convert it into array
             }
 

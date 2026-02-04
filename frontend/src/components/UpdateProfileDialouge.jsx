@@ -18,7 +18,7 @@ const UpdateProfileDialouge = ({ open, setOpen }) => {
     email: user?.email,
     phoneNumber: user?.phoneNumber,
     bio: user?.bio,
-    skills: user?.skills?.map((skill) => skill),
+    skills: user?.profile?.skills?.map((skill) => skill),
     file: user?.profile?.resume
   });
 

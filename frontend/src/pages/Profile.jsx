@@ -173,11 +173,17 @@ const Profile = () => {
                 <button className='text-gray-400 hover:text-black'><Edit3 size={16} /></button>
               </div>
               <div className='flex flex-wrap gap-2'>
-                {skills.map((skill, i) => (
-                  <span key={i} className='px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-200 transition-colors cursor-default'>
-                    {skill.name}
+                { user?.profile?.skills?.length === 0 ? (
+                  <span className='px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-200 transition-colors cursor-default'>
+                    No Skills Added
                   </span>
-                ))}
+                ) : (
+                  user?.profile?.skills.map((skill, i) => (
+                    <span key={i} className='px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-200 transition-colors cursor-default'>
+                      {skill}
+                    </span>
+                  ))
+                )}
               </div>
             </div>
           </aside>
