@@ -103,7 +103,7 @@ const Profile = () => {
                   </div>
                   <div className='flex items-center gap-3 text-gray-600'>
                     <div className='p-2 bg-gray-50 rounded-lg'><Phone size={18} /></div>
-                    <span className='text-sm'>+1 234 567 890</span>
+                    <span className='text-sm'>{user?.phoneNumber}</span>
                   </div>
                   <div className='flex items-center gap-3 text-gray-600'>
                     <div className='p-2 bg-gray-50 rounded-lg'><MapPin size={18} /></div>

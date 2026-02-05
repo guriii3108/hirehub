@@ -141,31 +141,34 @@ export const updateProfile = async (req, res) => {
         const { fullName, email, phoneNumber, bio, skills } = req.body;
 
         const file = req.file; //handle file upload -- like cloudinary and all later...
+        // file is optional, only process if exists
+        let cloudinaryResponse;
+        if (file) {
+            const fileUri = getDataUri(file);
+            // const cloudinaryResponse = await cloudinary.uploader.upload(fileUri.content,{
+            //     resource_type: "auto",
+            //     // format: "pdf",
+            //     public_id: `${file.originalname.split('.')[0]}_${Date.now()}.pdf`, //this line because Cloudinary forces PDFs uploaded as "images" to download automatically for security reasons
+            // });
 
-        const fileUri = getDataUri(file);
-        // const cloudinaryResponse = await cloudinary.uploader.upload(fileUri.content,{
-        //     resource_type: "auto",
-        //     // format: "pdf",
-        //     public_id: `${file.originalname.split('.')[0]}_${Date.now()}.pdf`, //this line because Cloudinary forces PDFs uploaded as "images" to download automatically for security reasons
-        // });
+            //user must authenticated if they wanna update profile
 
-        //user must authenticated if they wanna update profile
-
-        const buffer = file.buffer; //buffer is the raw data of the file
-        const cloudinaryResponse = await new Promise((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream(
-                {
-                    folder: "resumes",
-                    resource_type: "auto", // Works for untrusted accounts
-                    // Cloudinary will automatically add .pdf extension for auto-detected PDFs
-                },
-                (error, result) => {
-                    if (error) return reject(error);
-                    resolve(result);
-                },
-            );
-            uploadStream.end(buffer);
-        });
+            const buffer = file.buffer; //buffer is the raw data of the file
+            cloudinaryResponse = await new Promise((resolve, reject) => {
+                const uploadStream = cloudinary.uploader.upload_stream(
+                    {
+                        folder: "resumes",
+                        resource_type: "auto", // Works for untrusted accounts
+                        // Cloudinary will automatically add .pdf extension for auto-detected PDFs
+                    },
+                    (error, result) => {
+                        if (error) return reject(error);
+                        resolve(result);
+                    },
+                );
+                uploadStream.end(buffer);
+            });
+        }
 
         const userId = req.id; //middleware authentication(later)
 
