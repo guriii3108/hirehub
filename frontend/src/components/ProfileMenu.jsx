@@ -1,14 +1,40 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { User, LogOut, Settings, FileText } from 'lucide-react'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { showError, showSuccess } from '../utils/toast';
+import axios from 'axios';
+import { setUser } from '../redux/authSlice';
+import { USER_API_ENDPOINT } from '../utils/constant'
+
 
 const ProfileMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef(null)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {user} = useSelector((store) => store.auth);
   const name = user.fullName.split(" ").map((word) => word.charAt(0).toUpperCase()).join("");
+
+  const logoutHandler = async() => {
+    try {
+      const response = await axios.post(`${USER_API_ENDPOINT}/logout`, 
+        {},
+        {
+          withCredentials: true
+        }
+      );
+      if(response.data.success){
+        dispatch(setUser(null));
+        showSuccess(response.data.message);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+      showError(error.response.data.message);  
+    }
+  }
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -79,11 +105,10 @@ const ProfileMenu = () => {
             <button
               className='w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors gap-3 mx-1 rounded-md'
               onClick={() => {
-                console.log("Logout Successfully");
-                setIsOpen(false);
+                logoutHandler();
               }}
             >
-              <LogOut size={16} />
+              <LogOut  size={16} />
               Sign out
             </button>
           </div>
