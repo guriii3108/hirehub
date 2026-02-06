@@ -19,7 +19,8 @@ const UpdateProfileDialouge = ({ open, setOpen }) => {
     phoneNumber: user?.phoneNumber,
     bio: user?.profile?.bio,
     skills: user?.profile?.skills?.map((skill) => skill),
-    file: user?.profile?.resume
+    file: user?.profile?.resume,
+    profilePicture: user?.profile?.profilePicture
   });
 
   const changeEventHandler = (e) => {
@@ -29,6 +30,10 @@ const UpdateProfileDialouge = ({ open, setOpen }) => {
   const fileHandler = (e) => {
     const file = e.target.files?.[0];
     setInput({ ...input, file: file });
+  }
+  const profilePictureHandler = (e) => {
+    const profilePicture = e.target.files?.[0];
+    setInput({ ...input, profilePicture: profilePicture });
   }
 
   const submitHandler = async (e) => {
@@ -43,6 +48,9 @@ const UpdateProfileDialouge = ({ open, setOpen }) => {
     formData.append("skills", input.skills);
     if(input.file){
       formData.append("file", input.file);
+    }
+    if(input.profilePicture){
+      formData.append("profilePicture", input.profilePicture);
     }
     try {
       const response = await axios.put(`${USER_API_ENDPOINT}/update`, formData, {
@@ -164,6 +172,20 @@ const UpdateProfileDialouge = ({ open, setOpen }) => {
                   id="file"
                   accept="application/pdf"
                   onChange={fileHandler}
+                  className='w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-black file:text-white hover:file:bg-gray-800 cursor-pointer bg-gray-50/50'
+                />
+              </div>
+            </div>
+
+            {/* Profile Picture */}
+            <div className='space-y-1.5'>
+              <label htmlFor="profilePicture" className='text-sm font-medium text-gray-700'>Profile Picture</label>
+              <div className='relative'>
+                <input
+                  type="file"
+                  id="profilePicture"
+                  accept="image/*"
+                  onChange={profilePictureHandler}
                   className='w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-black file:text-white hover:file:bg-gray-800 cursor-pointer bg-gray-50/50'
                 />
               </div>

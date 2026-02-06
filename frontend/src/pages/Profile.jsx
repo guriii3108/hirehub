@@ -86,15 +86,15 @@ const Profile = () => {
               <div className='absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-10'></div>
 
               <div className='relative flex flex-col items-center text-center mt-4'>
-                <div className='w-28 h-28 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white mb-4'>
-                  <img
-                    src={user?.avatar || `https://ui-avatars.com/api/?name=${name}&background=2563eb&color=fff&size=128`}
+                <div className='w-28 h-28 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white mb-4 hover:cursor-pointer transition-transform hover:scale-115 active:scale-95'>
+                  <img onClick={() => setIsEditing(true)}
+                    src={user?.profile?.profilePicture ? user?.profile?.profilePicture : `https://ui-avatars.com/api/?name=${name}&background=2563eb&color=fff&size=128`}
                     alt={user?.fullName}
                     className='w-full h-full object-cover'
                   />
                 </div>
                 <h1 className='text-2xl font-bold text-gray-900'>{user?.fullName}</h1>
-                <p className='text-gray-500 font-medium mt-1'>{user?.role || "Software Engineer"}</p>
+                <p className='text-gray-500 font-medium mt-1 capitalize'>{user?.role || "Software Engineer"}</p>
 
                 <div className='mt-6 w-full space-y-4 text-left'>
                   <div className='flex items-center gap-3 text-gray-600'>

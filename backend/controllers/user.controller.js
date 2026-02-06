@@ -19,11 +19,14 @@ export const register = async (req, res) => {
         //handle file upload
         let profilePictureUrl = ""; //default empty
         if (req.file) {
-            const file = req.file; //for profile picture 
+            const file = req.file; //for profile picture
             const fileUri = getDataUri(file);
-            const cloudinaryResponse = await cloudinary.uploader.upload(fileUri.content, {
-                resource_type: "auto",
-            });
+            const cloudinaryResponse = await cloudinary.uploader.upload(
+                fileUri.content,
+                {
+                    resource_type: "auto",
+                },
+            );
             profilePictureUrl = cloudinaryResponse.secure_url;
         }
 
@@ -153,34 +156,30 @@ export const updateProfile = async (req, res) => {
     try {
         const { fullName, email, phoneNumber, bio, skills } = req.body;
 
-        const file = req.file; //handle file upload -- like cloudinary and all later...
+        const resume = req?.files?.file?.[0]; //handle file upload -- like cloudinary and all later...
+        const profilePicture = req?.files?.profilePicture?.[0];
         // file is optional, only process if exists
-        let cloudinaryResponse;
-        if (file) {
-            const fileUri = getDataUri(file);
-            // const cloudinaryResponse = await cloudinary.uploader.upload(fileUri.content,{
-            //     resource_type: "auto",
-            //     // format: "pdf",
-            //     public_id: `${file.originalname.split('.')[0]}_${Date.now()}.pdf`, //this line because Cloudinary forces PDFs uploaded as "images" to download automatically for security reasons
-            // });
 
-            //user must authenticated if they wanna update profile
+        let resumeUrl;
+        if (resume) {
+            const resumeUri = getDataUri(resume);
+            const cloudinaryResponse = await cloudinary.uploader.upload(
+                resumeUri.content,
+                {
+                    resource_type: "auto",
+                    public_id: `${resume.originalname.split(".")[0]}_${Date.now()}.pdf`, //this line because Cloudinary forces PDFs uploaded as "images" to download automatically for security reasons
+                },
+            );
+            resumeUrl = cloudinaryResponse.secure_url;
+        }
 
-            const buffer = file.buffer; //buffer is the raw data of the file
-            cloudinaryResponse = await new Promise((resolve, reject) => {
-                const uploadStream = cloudinary.uploader.upload_stream(
-                    {
-                        folder: "resumes",
-                        resource_type: "auto", // Works for untrusted accounts
-                        // Cloudinary will automatically add .pdf extension for auto-detected PDFs
-                    },
-                    (error, result) => {
-                        if (error) return reject(error);
-                        resolve(result);
-                    },
-                );
-                uploadStream.end(buffer);
+        let profilePictureUrl;
+        if(profilePicture){
+            const profilePictureUri = getDataUri(profilePicture);
+            const cloudinaryResponse = await cloudinary.uploader.upload(profilePictureUri.content,{
+                resource_type:"auto",
             });
+            profilePictureUrl = cloudinaryResponse.secure_url;
         }
 
         const userId = req.id; //middleware authentication(later)
@@ -224,9 +223,12 @@ export const updateProfile = async (req, res) => {
             }
 
             //resume and profile picture will be handled here
-            if (cloudinaryResponse) {
-                profile.resume = cloudinaryResponse.secure_url; //cloudinary URL
-                profile.resumeOriginalName = file.originalname; //save original name
+            if (resumeUrl) {
+                profile.resume = resumeUrl; //cloudinary URL
+                profile.resumeOriginalName = resume.originalname; //save original name
+            }
+            if(profilePictureUrl){
+                profile.profilePicture = profilePictureUrl;
             }
             await profile.save();
         }

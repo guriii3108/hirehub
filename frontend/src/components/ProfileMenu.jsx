@@ -59,7 +59,7 @@ const ProfileMenu = () => {
       >
         <div className='w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm ring-2 ring-gray-100 hover:ring-blue-200 transition-all'>
           <img
-            src={user.avatar ? user.avatar : `https://ui-avatars.com/api/?name=${name}&background=3b82f6&color=fff`}
+            src={user?.profile?.profilePicture ? user?.profile?.profilePicture : `https://ui-avatars.com/api/?name=${name}&background=3b82f6&color=fff`}
             alt={user.fullName}
             className='w-full h-full object-cover'
           />
