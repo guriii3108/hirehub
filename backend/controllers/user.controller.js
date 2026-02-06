@@ -15,6 +15,18 @@ export const register = async (req, res) => {
                 success: false,
             });
         }
+
+        //handle file upload
+        let profilePictureUrl = ""; //default empty
+        if (req.file) {
+            const file = req.file; //for profile picture 
+            const fileUri = getDataUri(file);
+            const cloudinaryResponse = await cloudinary.uploader.upload(fileUri.content, {
+                resource_type: "auto",
+            });
+            profilePictureUrl = cloudinaryResponse.secure_url;
+        }
+
         const user = await User.findOne({ email }); //because email is unique
         if (user) {
             return res.status(400).json({
@@ -37,6 +49,7 @@ export const register = async (req, res) => {
             bio: "",
             skills: [],
             //later we add fields like resume, profile pic and all
+            profilePicture: profilePictureUrl,
         });
 
         //linking the user and profile on basis of id...

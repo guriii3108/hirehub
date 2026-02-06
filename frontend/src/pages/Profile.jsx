@@ -105,14 +105,14 @@ const Profile = () => {
                     <div className='p-2 bg-gray-50 rounded-lg'><Phone size={18} /></div>
                     <span className='text-sm'>{user?.phoneNumber}</span>
                   </div>
-                  <div className='flex items-center gap-3 text-gray-600'>
+                  {/* <div className='flex items-center gap-3 text-gray-600'>
                     <div className='p-2 bg-gray-50 rounded-lg'><MapPin size={18} /></div>
                     <span className='text-sm'>San Francisco, CA</span>
                   </div>
                   <div className='flex items-center gap-3 text-gray-600'>
                     <div className='p-2 bg-gray-50 rounded-lg'><LinkIcon size={18} /></div>
                     <a href="#" className='text-sm text-blue-600 hover:underline'>portfolio.dev</a>
-                  </div>
+                  </div> */}
                 </div>
 
                 <button onClick={() => setIsEditing(true)} className='w-full mt-8 bg-black text-white py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors flex items-center justify-center gap-2'>
