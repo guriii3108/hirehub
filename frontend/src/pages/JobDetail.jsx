@@ -1,25 +1,49 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { MapPin, Briefcase, DollarSign, Clock, Globe, Users, Calendar, ArrowLeft, Send, Bookmark, Share2 } from 'lucide-react'
-import { useNavigate, useParams} from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { JOB_API_ENDPOINT } from '../utils/constant'
+import { JOB_API_ENDPOINT, APPLICATION_API_ENDPOINT } from '../utils/constant'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setSingleJob } from '../redux/jobSlice'
 import { useSelector } from 'react-redux'
+import { showError, showSuccess } from '../utils/toast'
+
 
 const JobDetail = () => {
   const navigate = useNavigate();
-  const isApplied = false;
-
   const params = useParams();
   const jobId = params.id;
 
-  const {user} = useSelector((store)=>store.auth);
-  const {singleJob} = useSelector((store)=>store.job);
+  const { user } = useSelector((store) => store.auth);
+  const { singleJob } = useSelector((store) => store.job);
   const dispatch = useDispatch();
+
+  const isInitialApplied = singleJob?.applications?.some((applications) => applications.applicant === user?._id);
+  // const isInitialApplied = singleJob?.applications?.includes(user?._id);
+  console.log(isInitialApplied);
+
+  const [isApplied, setIsApplied] = useState(isInitialApplied);
+
+  const applyJobHandler = async () => {
+    try {
+      const response = await axios.get(`${APPLICATION_API_ENDPOINT}/apply/${jobId}`, {
+        withCredentials: true,
+      })
+      if (response.data.success) {
+        console.log(response.data);
+        showSuccess(response.data.message);
+        setIsApplied(true); //UPDATE LOCAL STATE
+        const updatedJob = {...singleJob,applications:[...singleJob.applications,{applicant:user?._id}]}
+        dispatch(setSingleJob(updatedJob)); //realtime UI update
+      }
+    } catch (error) {
+      console.log(error);
+      showError(error.response.data.message);
+    }
+  }
 
   const daysAgoFunction = (date) => {
     const createdAt = new Date(date);
@@ -30,20 +54,21 @@ const JobDetail = () => {
   };
 
   useEffect(() => {
-    const getSingleJob =async()=>{
-      try{
-        const response = await axios.get(`${JOB_API_ENDPOINT}/get-job/${jobId}`,{
-          withCredentials:true,
+    const getSingleJob = async () => {
+      try {
+        const response = await axios.get(`${JOB_API_ENDPOINT}/get-job/${jobId}`, {
+          withCredentials: true,
         });
-        if(response.data.success){
+        if (response.data.success) {
           dispatch(setSingleJob(response.data.job));
+          setIsApplied(response.data.job.applications.some((applications) => applications.applicant === user?._id)); //ensure the state is in sync with the fetched data;
         }
-      }catch(error){
+      } catch (error) {
         console.log(error);
       }
     }
     getSingleJob();
-  }, [jobId,dispatch,user?._id]) //we use jobId because we want to get single job when jobId changes
+  }, [jobId, dispatch, user?._id]) //we use jobId because we want to get single job when jobId changes
 
   // Mock Data for UI Designing
   const job = {
@@ -134,7 +159,7 @@ const JobDetail = () => {
                     <Bookmark className='w-5 h-5' />
                   </button>
                 </div>
-                <button
+                <button onClick={isInitialApplied ? null : applyJobHandler}
                   className={`${isApplied ? 'bg-green-600 hover:bg-green-700' : 'bg-[#6A38C2] hover:bg-[#5b30a6] hover:shadow-lg hover:shadow-purple-500/30'} text-white px-8 py-3.5 rounded-xl font-semibold transition-all shadow-md w-full sm:w-auto flex items-center justify-center gap-2 transform active:scale-95`}
                 >
                   {isApplied ? "Applied Successfully" : "Apply Now"}

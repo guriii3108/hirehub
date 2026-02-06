@@ -15,6 +15,7 @@ import { persistStore } from "redux-persist";
 
 const persistConfig = {
     key: "root", //key under which data will be stored in local storage
+    version: 1,
     storage,
     //why these?
     //FLUSH: when we dispatch an action, it flushes the state to storage
@@ -27,13 +28,14 @@ const persistConfig = {
 
 //wrap the reducer with persistReducer
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+const persistedJobReducer = persistReducer(persistConfig, jobReducer);
 
 const store = configureStore({
     reducer: {
         //we pass slices here(umm means diff diff fields.. like user, job etc)
         
         auth: persistedAuthReducer, //pass authReducer
-        job: jobReducer, //pass jobReducer
+        job: persistedJobReducer, //pass jobReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
