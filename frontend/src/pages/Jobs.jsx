@@ -2,10 +2,10 @@ import FilterCard from "../components/FilterCard";
 import Job from "../components/Job";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useSelector } from "react-redux";
 
 const Jobs = () => {
-  const jobs = [1, 2, 3, 4, 5, 6, 7, 8];
-  // const jobs = [];
+  const {allJobs} = useSelector((store) => store.job);
 
   return (
     <div>
@@ -20,7 +20,7 @@ const Jobs = () => {
 
           {/* Job List section */}
           <div className='flex-1 h-[88vh] overflow-y-auto pb-5 no-scrollbar'>
-            {jobs.length <= 0 ? (
+            {allJobs.length <= 0 ? (
               <div className='flex flex-col items-center justify-center h-full'>
                 <img className='w-24 h-24 mb-4 opacity-50 grayscale' src="https://cdn-icons-png.flaticon.com/512/7486/7486777.png" alt="No jobs" />
                 <span className='font-bold text-xl text-gray-800'>No Jobs Found</span>
@@ -28,9 +28,9 @@ const Jobs = () => {
               </div>
             ) : (
               <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                {jobs.map((item, index) => (
-                  <div key={index}>
-                    <Job/>
+                {allJobs.map((job) => (
+                  <div key={job._id}>
+                    <Job job={job}/>
                   </div>
                 ))}
               </div>

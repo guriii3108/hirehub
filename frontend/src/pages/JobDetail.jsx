@@ -2,11 +2,40 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { MapPin, Briefcase, DollarSign, Clock, Globe, Users, Calendar, ArrowLeft, Send, Bookmark, Share2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams} from 'react-router-dom'
+import axios from 'axios'
+import { JOB_API_ENDPOINT } from '../utils/constant'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { setSingleJob } from '../redux/jobSlice'
+import { useSelector } from 'react-redux'
 
 const JobDetail = () => {
   const navigate = useNavigate();
   const isApplied = false;
+
+  const params = useParams();
+  const jobId = params.id;
+
+  const {user} = useSelector((store)=>store.auth);
+  const {singleJob} = useSelector((store)=>store.job);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getSingleJob =async()=>{
+      try{
+        const response = await axios.get(`${JOB_API_ENDPOINT}/get-job/${jobId}`,{
+          withCredentials:true,
+        });
+        if(response.data.success){
+          dispatch(setSingleJob(response.data.job));
+        }
+      }catch(error){
+        console.log(error);
+      }
+    }
+    getSingleJob();
+  }, [jobId,dispatch,user?._id]) //we use jobId because we want to get single job when jobId changes
 
   // Mock Data for UI Designing
   const job = {
@@ -63,21 +92,21 @@ const JobDetail = () => {
                 <div className='w-24 h-24 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center p-4 flex-shrink-0'>
                   <img
                     src="https://www.logo.wine/a/logo/Google/Google-Logo.wine.svg"
-                    alt={job.company}
+                    alt={"Google"}
                     className='w-full h-full object-contain'
                   />
                 </div>
 
                 <div>
-                  <h1 className='text-3xl md:text-4xl font-bold text-gray-900 mb-3 tracking-tight'>{job.title}</h1>
+                  <h1 className='text-3xl md:text-4xl font-bold text-gray-900 mb-3 tracking-tight'>{singleJob?.title}</h1>
                   <div className='flex flex-wrap items-center gap-4 text-sm text-gray-600 font-medium'>
                     <span className='flex items-center gap-1.5 text-[#6A38C2] bg-purple-50 px-3 py-1 rounded-full border border-purple-100'>
                       <Globe className='w-3.5 h-3.5' />
-                      {job.company}
+                      {singleJob?.company?.name || "India"}
                     </span>
                     <span className='flex items-center gap-1.5 text-gray-500'>
                       <MapPin className='w-4 h-4' />
-                      {job.location}
+                      {singleJob?.location || "India"}
                     </span>
                     <span className='flex items-center gap-1.5 text-gray-500'>
                       <Clock className='w-4 h-4' />
@@ -141,7 +170,7 @@ const JobDetail = () => {
                   About the Role
                 </h2>
                 <p className='text-gray-600 leading-relaxed text-base'>
-                  {job.description}
+                  {singleJob?.description}
                 </p>
               </div>
 
@@ -167,12 +196,12 @@ const JobDetail = () => {
                 <h2 className='text-xl font-bold text-gray-900 mb-5'>Requirements</h2>
                 <div className='bg-white rounded-2xl border border-gray-100 p-6 shadow-sm'>
                   <ul className='space-y-4'>
-                    {job.requirements.map((req, index) => (
+                    {singleJob?.requirements?.map((item, index) => (
                       <li key={index} className='flex items-start gap-3.5 text-gray-600'>
                         <div className='w-6 h-6 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0 mt-0.5'>
                           <span className='w-1.5 h-1.5 rounded-full bg-[#6A38C2]'></span>
                         </div>
-                        <span className='leading-relaxed'>{req}</span>
+                        <span className='leading-relaxed'>{item}</span>
                       </li>
                     ))}
                   </ul>
@@ -190,7 +219,7 @@ const JobDetail = () => {
                   Required Skills
                 </h3>
                 <div className='flex flex-wrap gap-2.5'>
-                  {job.skills.map((skill, index) => (
+                  {singleJob?.skills?.map((skill, index) => (
                     <span key={index} className='px-3.5 py-1.5 bg-white text-gray-700 rounded-full text-sm font-medium border border-gray-200 hover:border-[#6A38C2] hover:text-[#6A38C2] transition-colors cursor-default shadow-sm'>
                       {skill}
                     </span>
@@ -200,7 +229,7 @@ const JobDetail = () => {
 
               {/* Company Overview */}
               <div className='bg-[#161b22] rounded-2xl p-6 text-white shadow-lg sticky top-6'>
-                <h3 className='font-bold text-lg mb-6'>About {job.company}</h3>
+                <h3 className='font-bold text-lg mb-6'>About {singleJob?.company?.name}</h3>
 
                 <div className='flex items-center gap-4 mb-6'>
                   <div className='w-14 h-14 rounded-xl bg-white p-2 flex items-center justify-center'>
@@ -217,7 +246,7 @@ const JobDetail = () => {
                 </div>
 
                 <p className='text-gray-300 leading-relaxed text-sm mb-6 border-t border-gray-700 pt-6'>
-                  {job.companyInfo.description}
+                  {singleJob?.company?.description}
                 </p>
 
                 <button className='w-full py-3 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-all backdrop-blur-sm border border-white/10 flex items-center justify-center gap-2 group'>

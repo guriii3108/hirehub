@@ -7,7 +7,6 @@ const LatestJobs = () => {
   const { allJobs } = useSelector((store) => store.job);
 
   return (
-    // Added bg-gray-50/50 to make the section distinct
     <div className='bg-gray-50/50 py-20'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='text-center mb-16'>
