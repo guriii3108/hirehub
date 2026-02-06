@@ -4,6 +4,15 @@ import { useNavigate } from 'react-router-dom'
 
 const Job = ({job}) => {
   const navigate = useNavigate();
+
+  const daysAgoFunction = (mongoDBTime) =>{
+    const createdAt = new Date(mongoDBTime); //MONGODB TIME
+    const currentTime = new Date(); //CURRENT TIME
+    const diffInTime = currentTime - createdAt; //DIFFERENCE IN TIME
+    const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24)); //DIFFERENCE IN DAYS
+    return diffInDays;
+  }
+
   return (
     <div className='p-6 rounded-xl shadow-sm bg-white border border-gray-100 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all duration-300'>
 
@@ -15,10 +24,10 @@ const Job = ({job}) => {
           </div>
           <div>
             <h2 className='font-semibold text-base text-gray-900'>{job?.company?.name}</h2>
-            <p className='text-xs text-gray-500'>Mountain View, CA</p>
+            <p className='text-xs text-gray-500'>India</p>
           </div>
         </div>
-        <p className='text-xs text-gray-400 font-medium'>2d ago</p>
+        <p className='text-xs text-gray-400 font-medium'>{daysAgoFunction(job?.createdAt)=== 0 ?"Today" : daysAgoFunction(job?.createdAt)=== 1 ? "Yesterday" : `${daysAgoFunction(job?.createdAt)} d ago`}</p>
       </div>
 
       {/* Role Title */}
@@ -45,9 +54,9 @@ const Job = ({job}) => {
       {/* Footer Actions */}
       <div className='flex items-center justify-between border-t border-gray-50 pt-4 mt-auto'>
         <button onClick={() => navigate(`/description/${job._id}`)} className='px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors border border-gray-200 rounded-lg hover:bg-gray-50'>
-          Details
+          View Details
         </button>
-        <button className='bg-[#6A38C2] text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-[#5b30a6] transition-colors shadow-sm'>
+        <button className='bg-[#6A38C2] text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-[#2b0f5a] transition-colors shadow-sm'>
           Save For Later
         </button>
       </div>

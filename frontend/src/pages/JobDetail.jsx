@@ -21,6 +21,14 @@ const JobDetail = () => {
   const {singleJob} = useSelector((store)=>store.job);
   const dispatch = useDispatch();
 
+  const daysAgoFunction = (date) => {
+    const createdAt = new Date(date);
+    const today = new Date();
+    const diffTime = today - createdAt;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
   useEffect(() => {
     const getSingleJob =async()=>{
       try{
@@ -110,7 +118,7 @@ const JobDetail = () => {
                     </span>
                     <span className='flex items-center gap-1.5 text-gray-500'>
                       <Clock className='w-4 h-4' />
-                      {job.postedDate}
+                      {daysAgoFunction(singleJob?.createdAt) === 0 ? "Today" : daysAgoFunction(singleJob?.createdAt) === 1 ? "Yesterday" : `${daysAgoFunction(singleJob?.createdAt)} d ago`}
                     </span>
                   </div>
                 </div>
@@ -135,12 +143,12 @@ const JobDetail = () => {
             </div>
 
             {/* Quick Stats Banner */}
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mt-10'>
+            <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 capitalize'>
               {[
-                { icon: <DollarSign className='w-5 h-5' />, label: "Offer Salary", value: job.salary },
-                { icon: <Briefcase className='w-5 h-5' />, label: "Job Type", value: job.type },
-                { icon: <Users className='w-5 h-5' />, label: "Applicants", value: `${job.applicants} Applied` },
-                { icon: <Calendar className='w-5 h-5' />, label: "Experience", value: job.experience },
+                { icon: <DollarSign className='w-5 h-5' />, label: "Offer Salary", value: singleJob?.salary },
+                { icon: <Briefcase className='w-5 h-5' />, label: "Job Type", value: singleJob?.jobType },
+                { icon: <Users className='w-5 h-5' />, label: "Applicants", value: `${singleJob?.applications?.length} Applied` },
+                { icon: <Calendar className='w-5 h-5' />, label: "Experience", value: singleJob?.experience },
               ].map((stat, index) => (
                 <div key={index} className='bg-white/60 backdrop-blur-sm p-4 rounded-xl border border-gray-100 hover:border-purple-100 hover:shadow-sm transition-all group'>
                   <div className='flex items-center gap-3'>
