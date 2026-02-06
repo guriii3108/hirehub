@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./authSlice";
+import authReducer from "./authSlice"; //import authReducer
+import jobReducer from "./jobSlice"; //import jobReducer
 import {
     persistReducer,
     FLUSH,
@@ -30,7 +31,9 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 const store = configureStore({
     reducer: {
         //we pass slices here(umm means diff diff fields.. like user, job etc)
-        auth: persistedAuthReducer,
+        
+        auth: persistedAuthReducer, //pass authReducer
+        job: jobReducer, //pass jobReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

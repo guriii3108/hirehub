@@ -1,9 +1,10 @@
 import React from 'react'
 import LatestJobCard from './LatestJobCard'
+import { useSelector } from 'react-redux'
+import { Briefcase } from 'lucide-react'
 
 const LatestJobs = () => {
-  // Generate distinct keys to force re-render if needed (though index is fine for static)
-  const randomJobs = [1, 2, 3, 4, 5, 6];
+  const { allJobs } = useSelector((store) => store.job);
 
   return (
     // Added bg-gray-50/50 to make the section distinct
@@ -17,9 +18,19 @@ const LatestJobs = () => {
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {randomJobs.map((item, index) => (
-            <LatestJobCard key={index} />
-          ))}
+          {allJobs.length > 0 ? allJobs.map((job) => (
+            <LatestJobCard key={job._id} job={job} />
+          )) : (
+            <div className='col-span-1 sm:col-span-2 lg:col-span-3 flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-dashed border-gray-200 text-center'>
+              <div className='p-4 bg-gray-50 rounded-full mb-4'>
+                <Briefcase className='w-8 h-8 text-gray-400' />
+              </div>
+              <h3 className='text-xl font-bold text-gray-900'>No Job Openings Found</h3>
+              <p className='text-gray-500 mt-2 max-w-sm mx-auto'>
+                There are currently no active job listings. Please check back later for new opportunities.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
