@@ -6,8 +6,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Browse from './pages/Browse.jsx'
 import Profile from './pages/Profile.jsx'
 import JobDetail from './pages/JobDetail.jsx'
+import useGetAllJobs from './hooks/useGetAllJobs.jsx'
 
 const App = () => {
+  useGetAllJobs();
   const appRouter = createBrowserRouter([
     {
       path: '/',

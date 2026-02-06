@@ -6,7 +6,7 @@ import Footer from '../components/Footer.jsx'
 import useGetAllJobs from '../hooks/useGetAllJobs.jsx'
 
 const Home = () => {
-  useGetAllJobs();
+  // useGetAllJobs();
   return (
     <>
       <Navbar />
