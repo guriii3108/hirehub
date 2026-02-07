@@ -14,7 +14,7 @@ const companySchema = new mongoose.Schema({
   logo:{
     type: String, //cloudinary url
   },
-  userId:{ //admin who created the company
+  userId:{ // admin/user who created the company
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,

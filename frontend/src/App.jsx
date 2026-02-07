@@ -9,6 +9,7 @@ import JobDetail from './pages/JobDetail.jsx'
 import useGetAllJobs from './hooks/useGetAllJobs.jsx'
 import Companies from './components/Admin/Companies.jsx'
 import PostJob from './components/Admin/PostJob.jsx'
+import CreateCompany from './components/Admin/CreateCompany.jsx'
 
 const App = () => {
   useGetAllJobs();
@@ -29,7 +30,7 @@ const App = () => {
       path: '/jobs',
       element: <Jobs />
     },
-    { 
+    {
       path: '/description/:id',
       element: <JobDetail />
     },
@@ -49,11 +50,15 @@ const App = () => {
     {
       path: '/admin/post-job',
       element: <PostJob />
-    }
+    },
+    {
+      path: "/admin/companies/create-company",
+      element: <CreateCompany />
+    },
   ])
   return (
     <>
-    <RouterProvider router={appRouter} />
+      <RouterProvider router={appRouter} />
     </>
   )
 }
