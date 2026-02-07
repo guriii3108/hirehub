@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice"; //import authReducer
 import jobReducer from "./jobSlice"; //import jobReducer
+import companyReducer from "./companySlice"; //import companyReducer
 import {
     persistReducer,
     FLUSH,
@@ -29,6 +30,7 @@ const persistConfig = {
 //wrap the reducer with persistReducer
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 const persistedJobReducer = persistReducer(persistConfig, jobReducer);
+const persistedCompanyReducer = persistReducer(persistConfig, companyReducer);
 
 const store = configureStore({
     reducer: {
@@ -36,6 +38,7 @@ const store = configureStore({
         
         auth: persistedAuthReducer, //pass authReducer
         job: persistedJobReducer, //pass jobReducer
+        company: persistedCompanyReducer, //pass companyReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
