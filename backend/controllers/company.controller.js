@@ -88,8 +88,7 @@ export const updateCompany = async(req,res)=>{
     const {name,description,website,location} = req.body;
     const {id} = req.params; //from auth middleware
 
-    // const file = req.file; //for logo
-    //handle file upload later
+    const file = req.file; //for logo
 
     const company = await Company.findByIdAndUpdate(id,{name,description,website,location},{new:true}); //new:true returns updated document 
 

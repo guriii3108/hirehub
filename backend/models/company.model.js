@@ -11,6 +11,14 @@ const companySchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  website:{
+    type: String,
+    trim: true
+  },
+  location:{
+    type: String,
+    trim: true
+  },
   logo:{
     type: String, //cloudinary url
   },
