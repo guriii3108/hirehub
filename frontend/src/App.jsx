@@ -1,6 +1,6 @@
 import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
-import SignUp from './pages/SignUp.jsx'
+import SignUp from './pages/Signup.jsx'
 import Jobs from './pages/Jobs.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Browse from './pages/Browse.jsx'
@@ -10,6 +10,7 @@ import useGetAllJobs from './hooks/useGetAllJobs.jsx'
 import Companies from './components/Admin/Companies.jsx'
 import PostJob from './components/Admin/PostJob.jsx'
 import CreateCompany from './components/Admin/CreateCompany.jsx'
+import CompanyDetail from './components/Admin/CompanyDetail.jsx'
 
 const App = () => {
   useGetAllJobs();
@@ -55,6 +56,10 @@ const App = () => {
       path: "/admin/companies/create-company",
       element: <CreateCompany />
     },
+    {
+      path: "/admin/companies/:companyId",
+      element: <CompanyDetail />
+    }
   ])
   return (
     <>
