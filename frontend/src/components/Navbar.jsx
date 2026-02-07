@@ -20,7 +20,17 @@ const Navbar = () => {
 
           {/* Center: Navigation (Absolute centered for perfect alignment) */}
           <div className='hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 gap-10 items-center'>
-            {['Home', 'Jobs', 'Browse'].map((item) => (
+            {user?.role === "recruiter" ? (
+              ['Home','Companies','Jobs'].map((item) => (
+              <Link
+                key={item}
+                to={item === 'Home' ? '/' : item === 'Jobs' ? '/post-job' : `/${item.toLowerCase()}`}
+                className='text-sm font-medium text-gray-500 hover:text-black transition-colors duration-200'
+              >
+                {item}
+              </Link>
+            ))) : (
+            ['Home', 'Jobs', 'Browse'].map((item) => (
               <Link
                 key={item}
                 to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
@@ -28,7 +38,8 @@ const Navbar = () => {
               >
                 {item}
               </Link>
-            ))}
+            )))
+            }
           </div>
 
           {/* Right: Auth / User Menu */}

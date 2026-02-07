@@ -74,6 +74,8 @@ const ProfileMenu = () => {
             <p className='text-xs text-gray-500 truncate'>{user.email}</p>
           </div>
 
+          {user?.role === "jobseeker" && (
+          <>
           <div className='py-1 space-y-0.5'>
             <Link
               to="/profile"
@@ -100,6 +102,8 @@ const ProfileMenu = () => {
               Settings
             </Link>
           </div>
+          </>
+          )}
 
           <div className='border-t border-gray-50 mt-1 pt-1'>
             <button
