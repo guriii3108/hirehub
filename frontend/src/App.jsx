@@ -7,6 +7,8 @@ import Browse from './pages/Browse.jsx'
 import Profile from './pages/Profile.jsx'
 import JobDetail from './pages/JobDetail.jsx'
 import useGetAllJobs from './hooks/useGetAllJobs.jsx'
+import Companies from './components/Admin/Companies.jsx'
+import PostJob from './components/Admin/PostJob.jsx'
 
 const App = () => {
   useGetAllJobs();
@@ -38,6 +40,15 @@ const App = () => {
     {
       path: '/profile',
       element: <Profile />
+    },
+    //for recruiter
+    {
+      path: '/admin/companies',
+      element: <Companies />
+    },
+    {
+      path: '/admin/post-job',
+      element: <PostJob />
     }
   ])
   return (
