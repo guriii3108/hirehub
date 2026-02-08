@@ -1,4 +1,6 @@
 import Company from "../models/company.model.js";
+import cloudinary from "../utils/cloudinary.js";
+import getDataUri from "../utils/dataUri.js";
 
 export const registerCompany = async(req,res)=>{
   try {
@@ -87,10 +89,35 @@ export const updateCompany = async(req,res)=>{
   try {
     const {name,description,website,location} = req.body;
     const {id} = req.params; //from auth middleware
-
     const file = req.file; //for logo
+    let logo;
+    if(file){
+    //cloudinary logo upload
+    const fileUri = getDataUri(file);
+    const cloudinaryResponse = await cloudinary.uploader.upload(fileUri.content, {
+      folder: "company-logos",
+    });
+    logo = cloudinaryResponse.secure_url;
+    }
 
-    const company = await Company.findByIdAndUpdate(id,{name,description,website,location},{new:true}); //new:true returns updated document 
+    const updateData = {};
+    if(name){
+      updateData.name = name;
+    }
+    if(description){
+      updateData.description = description;
+    }
+    if(website){
+      updateData.website = website;
+    }
+    if(location){
+      updateData.location = location;
+    }
+    if(logo){
+      updateData.logo = logo;
+    }
+
+    const company = await Company.findByIdAndUpdate(id,updateData,{new:true}); //new:true returns updated document 
 
     //if any field is not provided then it will not be updated
     if(!company){
