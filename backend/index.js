@@ -12,21 +12,25 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"]
-}));
+const corsOptions = {
+    origin: [
+        process.env.FRONTEND_URL,
+        "http://localhost:5173",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+};
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 //v1.. v2.. and on soo on .. it's called versioning for future.. if we make changes in api we can create new version
-app.use("/api/v1/user",userRoute); //user routes
-app.use("/api/v1/company",companyRoute); //company routes
-app.use("/api/v1/job",jobRoute); //job routes
-app.use("/api/v1/application",applicationRoute); //application routes
+app.use("/api/v1/user", userRoute); //user routes
+app.use("/api/v1/company", companyRoute); //company routes
+app.use("/api/v1/job", jobRoute); //job routes
+app.use("/api/v1/application", applicationRoute); //application routes
 
 app.listen(PORT, () => {
     connectDB();
