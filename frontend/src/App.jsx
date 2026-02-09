@@ -11,6 +11,7 @@ import Companies from './components/Admin/Companies.jsx'
 import PostJob from './components/Admin/PostJob.jsx'
 import CreateCompany from './components/Admin/CreateCompany.jsx'
 import CompanyDetail from './components/Admin/CompanyDetail.jsx'
+import AdminJobs from './components/Admin/AdminJobs.jsx'
 
 const App = () => {
   useGetAllJobs();
@@ -59,6 +60,10 @@ const App = () => {
     {
       path: "/admin/companies/:companyId",
       element: <CompanyDetail />
+    },
+    {
+      path: "/admin/jobs",
+      element: <AdminJobs />
     }
   ])
   return (
