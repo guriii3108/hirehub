@@ -1,35 +1,82 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../Navbar'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Loader2 } from 'lucide-react';
+import { showError, showSuccess } from '../../utils/toast';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import useGetCompanyById from '../../hooks/useGetCompanyById';
+import { COMPANY_API_ENDPOINT } from '../../utils/constant';
 
 const CompanyDetail = () => {
   const navigate = useNavigate();
-  const loading = false; // placeholder for loading state
-  const [input,setInput] =useState({
-    name:"",
-    description:"",
-    website:"",
-    location:"",
+  const { singleCompany } = useSelector(store => store.company);
+
+  const { companyId: id } = useParams();
+  useGetCompanyById(id);
+  const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState({
+    name: "",
+    description: "",
+    website: "",
+    location: "",
+    file: null,
   })
-  
-  const changeEventHandler = (e)=>{
+
+  const changeEventHandler = (e) => {
     setInput({
-      ...input,[e.target.name]:e.target.value
+      ...input, [e.target.name]: e.target.value
     })
   }
 
-  const changeFileHandler = (e)=>{
+  const changeFileHandler = (e) => {
     const file = e.target.files[0];
     setInput({
-      ...input,logo:file
+      ...input, file
     })
   }
 
-const submitHandler = (e)=>{
-  e.preventDefault();
-  console.log(input);
-}
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    console.log(input);
+    const formData = new FormData();
+    formData.append("name", input.name);
+    formData.append("description", input.description);
+    formData.append("website", input.website);
+    formData.append("location", input.location);
+    if (input.file) {
+      formData.append("file", input.file);
+    }
+    try {
+      setLoading(true);
+      const response = await axios.put(`${COMPANY_API_ENDPOINT}/update-company/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+      if (response?.data?.success) {
+        showSuccess(response?.data?.message);
+        navigate("/admin/companies");
+      }
+
+    } catch (error) {
+      console.log(error);
+      showError(error?.response?.data?.message || "Something went wrong");
+    }
+    finally {
+      setLoading(false);
+    }
+  }
+  useEffect(() => {
+    setInput({
+      name: singleCompany?.name || "",
+      description: singleCompany?.description || "",
+      website: singleCompany?.website || "",
+      location: singleCompany?.location || "",
+      file: null
+    })
+  }, [singleCompany])
 
   return (
     <div className="min-h-screen bg-gray-50/30">
@@ -59,6 +106,7 @@ const submitHandler = (e)=>{
               <input
                 type="text"
                 name="name"
+                id="name"
                 value={input.name}
                 onChange={changeEventHandler}
                 className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all bg-gray-50/50 focus:bg-white'
@@ -71,6 +119,7 @@ const submitHandler = (e)=>{
               <input
                 type="text"
                 name="description"
+                id="description"
                 value={input.description}
                 onChange={changeEventHandler}
                 className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all bg-gray-50/50 focus:bg-white'
@@ -83,6 +132,7 @@ const submitHandler = (e)=>{
               <input
                 type="text"
                 name="website"
+                id="website"
                 value={input.website}
                 onChange={changeEventHandler}
                 className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all bg-gray-50/50 focus:bg-white'
@@ -95,6 +145,7 @@ const submitHandler = (e)=>{
               <input
                 type="text"
                 name="location"
+                id="location"
                 value={input.location}
                 onChange={changeEventHandler}
                 className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all bg-gray-50/50 focus:bg-white'
@@ -111,13 +162,14 @@ const submitHandler = (e)=>{
                   </svg>
                   <div className="flex text-sm text-gray-600">
                     <label htmlFor="file" className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
-                      <span>Upload a file</span>
-                      <input id="file" name="file" type="file" accept="image/*" className="sr-only" 
-                      onChange={changeFileHandler} />
+                      <span>{input.file ? input.file.name : "Upload a file"}</span>
+                      <input id="file" name="file" type="file" accept="image/*" className="sr-only" onChange={changeFileHandler} />
                     </label>
-                    <p className="pl-1">or drag and drop</p>
+                    {/* Only show "or drag and drop" if NO file is selected */}
+                    {!input.file && <p className="pl-1">or drag and drop</p>}
                   </div>
-                  <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                  {/* Only show "PNG, JPG..." if NO file is selected */}
+                  {!input.file && <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>}
                 </div>
               </div>
             </div>
