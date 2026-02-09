@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { MoreHorizontal } from 'lucide-react'
 import { useSelector } from 'react-redux'
-import useGetAllCompanies from '../../hooks/useGetAllCompanies'
 import { useNavigate } from 'react-router-dom'
 
 const CompaniesTable = () => {
   const navigate = useNavigate();
+  const { companies,searchCompany } = useSelector(store => store.company)
 
-  useGetAllCompanies()
-  const { companies } = useSelector(store => store.company)
+  const [filterCompany ,setFilterCompany] = useState(companies)
+  useEffect(()=>{
+    const filteredCompany = companies.length>0 && companies.filter((company)=>{
+      if(!searchCompany){
+        return true
+      }
+      return company.name.toLowerCase().includes(searchCompany.toLowerCase())
+    })
+    setFilterCompany(filteredCompany)
+  },[companies,searchCompany])
+
 
   return (
     <div className='overflow-x-auto bg-white rounded-xl shadow-md border border-gray-100'>
@@ -22,14 +31,14 @@ const CompaniesTable = () => {
           </tr>
         </thead>
         <tbody className='divide-y divide-gray-100'>
-          {companies.length === 0 ? (
+          {filterCompany.length === 0 ? (
             <tr>
               <td colSpan="4" className="text-center py-8 text-gray-400 font-medium">
                 No Companies Found
               </td>
             </tr>
           ) : (
-            companies.map((item, index) => (
+            filterCompany.map((item, index) => (
               <tr key={index} className='hover:bg-gray-50/50 transition-colors group cursor-pointer'>
                 <td className='px-6 py-4'>
                   <div className='w-12 h-12 rounded-lg border border-gray-200 bg-white flex items-center justify-center p-1 shadow-sm'>
