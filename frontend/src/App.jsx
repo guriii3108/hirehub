@@ -13,6 +13,7 @@ import CreateCompany from './components/Admin/CreateCompany.jsx'
 import CompanyDetail from './components/Admin/CompanyDetail.jsx'
 import AdminJobs from './components/Admin/AdminJobs.jsx'
 
+
 const App = () => {
   useGetAllJobs();
   const appRouter = createBrowserRouter([
