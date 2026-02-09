@@ -5,6 +5,9 @@ const jobSlice = createSlice({
   initialState:{
     allJobs:[], //we can put null also but we use array because we can store multiple jobs
     singleJob:null, //for single job
+
+    //for admin
+    allAdminJobs:[],
   },
   reducers:{
     //actions...
@@ -13,6 +16,9 @@ const jobSlice = createSlice({
     },
     setSingleJob:(state,action)=>{ //for single job
       state.singleJob = action.payload;
+    },
+    setAllAdminJobs:(state,action)=>{
+      state.allAdminJobs = action.payload;
     }
   }
 })

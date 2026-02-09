@@ -109,7 +109,7 @@ export const getAdminJobs = async(req,res)=>{
       })
     }
     return res.status(200).json({
-      message:"All jobs",
+      message:"All jobs Fetched Successfully",
       success:true,
       jobs,
     })
