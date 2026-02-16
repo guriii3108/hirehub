@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom'
 
 const AdminJobsTable = () => {
   const navigate = useNavigate();
-  const { allAdminJobs,setAllAdminJobs } = useSelector(store => store.job)
-
+  const { allAdminJobs } = useSelector(store => store.job)
+  const { searchJob } = useSelector(store => store.job)
   const [filterJob ,setFilterJob] = useState(allAdminJobs)
+
 
   useEffect(()=>{
     const filteredJob = allAdminJobs.length>0 && allAdminJobs.filter((job)=>{
@@ -23,7 +24,7 @@ const AdminJobsTable = () => {
   return (
     <div className='overflow-x-auto bg-white rounded-xl shadow-md border border-gray-100'>
       <table className='w-full text-sm text-left text-gray-500'>
-        <thead className='text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200'>
+        <thead className='text-xs text-gray-700 uppercase bg-gray-50 bord er-b border-gray-200'>
           <tr>
             <th className='px-6 py-4 font-semibold'>Company Name</th>
             <th className='px-6 py-4 font-semibold'>Role</th>
@@ -39,12 +40,12 @@ const AdminJobsTable = () => {
               </td>
             </tr>
           ) : (
-            filterJob.map((item, index) => (
+            filterJob.map((job, index) => (
               <tr key={index} className='hover:bg-gray-50/50 transition-colors group cursor-pointer'>
-                <td className='px-6 py-4 font-medium text-gray-900'>{item.title}</td>
-                <td className='px-6 py-4 text-gray-600'>{item.createdAt.split("T")[0]}</td>
+                <td className='px-6 py-4 font-medium text-gray-900'>{job.title}</td>
+                <td className='px-6 py-4 text-gray-600'>{job.createdAt.split("T")[0]}</td>
                 <td className='px-6 py-4 text-right'>
-                  <button title="Edit" onClick={()=>navigate(`/admin/jobs/${item._id}`)} className='p-2 rounded-full hover:bg-gray-200 text-gray-500 hover:text-gray-900 transition-colors'>
+                  <button title="Edit" onClick={()=>navigate(`/admin/jobs/${job._id}`)} className='p-2 rounded-full hover:bg-gray-200 text-gray-500 hover:text-gray-900 transition-colors'>
                     <MoreHorizontal className='w-5 h-5' />
                   </button>
                 </td>
