@@ -15,7 +15,7 @@ const AdminJobsTable = () => {
       if(!searchJob){
         return true
       }
-      return job.title.toLowerCase().includes(searchJob.toLowerCase())
+      return job?.title?.toLowerCase().includes(searchJob.toLowerCase()) || job?.company?.name?.toLowerCase().includes(searchJob.toLowerCase())
     }) : []
     setFilterJob(filteredJob)
   },[allAdminJobs,searchJob])
