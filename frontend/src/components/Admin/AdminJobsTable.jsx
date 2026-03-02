@@ -11,12 +11,12 @@ const AdminJobsTable = () => {
 
 
   useEffect(()=>{
-    const filteredJob = allAdminJobs.length>0 && allAdminJobs.filter((job)=>{
+    const filteredJob = allAdminJobs && allAdminJobs.length>0 ? allAdminJobs.filter((job)=>{
       if(!searchJob){
         return true
       }
       return job.title.toLowerCase().includes(searchJob.toLowerCase())
-    })
+    }) : []
     setFilterJob(filteredJob)
   },[allAdminJobs,searchJob])
 
@@ -42,6 +42,7 @@ const AdminJobsTable = () => {
           ) : (
             filterJob.map((job, index) => (
               <tr key={index} className='hover:bg-gray-50/50 transition-colors group cursor-pointer'>
+                <td className='px-6 py-4 font-medium text-gray-900'>{job.company.name}</td>
                 <td className='px-6 py-4 font-medium text-gray-900'>{job.title}</td>
                 <td className='px-6 py-4 text-gray-600'>{job.createdAt.split("T")[0]}</td>
                 <td className='px-6 py-4 text-right'>
