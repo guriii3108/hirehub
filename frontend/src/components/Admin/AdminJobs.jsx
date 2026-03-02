@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import useGetAllAdminJobs from '../../hooks/useGetAllAdminJobs.jsx';
 import AdminJobsTable from './AdminJobsTable.jsx';
 import { useDispatch } from 'react-redux';
+import { setSearchJob } from '../../redux/jobSlice.js';
 
 const AdminJobs = () => {
   useGetAllAdminJobs();
@@ -12,7 +13,10 @@ const AdminJobs = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  
+  useEffect(()=>{
+    dispatch(setSearchJob(input))
+  },[input])
+
   return (
     <div>
       <Navbar />
@@ -25,7 +29,7 @@ const AdminJobs = () => {
           />
           <button onClick={() => navigate("/admin/companies/create-company")} className="bg-black text-white px-4 py-2 rounded-md font-medium">New Job</button>
         </div>
-        <AdminJobsTable />
+        <AdminJobsTable input={input} />
       </div>
       <Footer />
     </div>
