@@ -27,7 +27,7 @@ const AdminJobs = () => {
             placeholder="Filter by name"
             onChange={(e) => setInput(e.target.value)}
           />
-          <button onClick={() => navigate("/admin/companies/create-company")} className="bg-black text-white px-4 py-2 rounded-md font-medium">New Job</button>
+          <button onClick={() => navigate("/admin/post-job")} className="bg-black text-white px-4 py-2 rounded-md font-medium">New Job</button>
         </div>
         <AdminJobsTable input={input} />
       </div>
