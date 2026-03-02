@@ -26,6 +26,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Vercel Database Connection Middleware 
+app.use(async (req, res, next) => {
+    await connectDB();
+    next();
+});
+
 //v1.. v2.. and on soo on .. it's called versioning for future.. if we make changes in api we can create new version
 app.use("/api/v1/user", userRoute); //user routes
 app.use("/api/v1/company", companyRoute); //company routes
@@ -33,6 +39,5 @@ app.use("/api/v1/job", jobRoute); //job routes
 app.use("/api/v1/application", applicationRoute); //application routes
 
 app.listen(PORT, () => {
-    connectDB();
     console.log(`Server is running on port ${PORT}`);
 });
