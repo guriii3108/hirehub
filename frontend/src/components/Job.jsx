@@ -20,7 +20,7 @@ const Job = ({job}) => {
       <div className='flex items-start justify-between mb-4'>
         <div className='flex items-center gap-4'>
           <div className='w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center border border-gray-100'>
-            <img src="https://www.logo.wine/a/logo/Google/Google-Logo.wine.svg" alt="Google" className='w-8 h-8 object-contain' />
+            <img src={job?.company?.logo} alt="Google" className='w-8 h-8 object-contain' />
           </div>
           <div>
             <h2 className='font-semibold text-base text-gray-900'>{job?.company?.name}</h2>
