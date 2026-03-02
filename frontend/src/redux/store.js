@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice"; //import authReducer
 import jobReducer from "./jobSlice"; //import jobReducer
 import companyReducer from "./companySlice"; //import companyReducer
@@ -28,18 +28,21 @@ const persistConfig = {
 };
 
 //wrap the reducer with persistReducer
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
-const persistedJobReducer = persistReducer(persistConfig, jobReducer);
-const persistedCompanyReducer = persistReducer(persistConfig, companyReducer);
+// const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+// const persistedJobReducer = persistReducer(persistConfig, jobReducer);
+// const persistedCompanyReducer = persistReducer(persistConfig, companyReducer);
+
+const rootReducer = combineReducers({
+    auth: authReducer,
+    job: jobReducer,
+    company: companyReducer
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-    reducer: {
-        //we pass slices here(umm means diff diff fields.. like user, job etc)
-        
-        auth: persistedAuthReducer, //pass authReducer
-        job: persistedJobReducer, //pass jobReducer
-        company: persistedCompanyReducer, //pass companyReducer
-    },
+    reducer: persistedReducer,
+
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
