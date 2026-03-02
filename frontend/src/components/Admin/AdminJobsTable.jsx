@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { MoreHorizontal } from 'lucide-react'
+import { Edit, Eye, MoreHorizontal } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,18 +7,18 @@ const AdminJobsTable = () => {
   const navigate = useNavigate();
   const { allAdminJobs } = useSelector(store => store.job)
   const { searchJob } = useSelector(store => store.job)
-  const [filterJob ,setFilterJob] = useState(allAdminJobs)
+  const [filterJob, setFilterJob] = useState(allAdminJobs)
 
 
-  useEffect(()=>{
-    const filteredJob = allAdminJobs && allAdminJobs.length>0 ? allAdminJobs.filter((job)=>{
-      if(!searchJob){
+  useEffect(() => {
+    const filteredJob = allAdminJobs && allAdminJobs.length > 0 ? allAdminJobs.filter((job) => {
+      if (!searchJob) {
         return true
       }
       return job?.title?.toLowerCase().includes(searchJob.toLowerCase()) || job?.company?.name?.toLowerCase().includes(searchJob.toLowerCase())
     }) : []
     setFilterJob(filteredJob)
-  },[allAdminJobs,searchJob])
+  }, [allAdminJobs, searchJob])
 
 
   return (
@@ -46,9 +46,19 @@ const AdminJobsTable = () => {
                 <td className='px-6 py-4 font-medium text-gray-900'>{job.title}</td>
                 <td className='px-6 py-4 text-gray-600'>{job.createdAt.split("T")[0]}</td>
                 <td className='px-6 py-4 text-right'>
-                  <button title="Edit" onClick={()=>navigate(`/admin/jobs/${job._id}`)} className='p-2 rounded-full hover:bg-gray-200 text-gray-500 hover:text-gray-900 transition-colors'>
-                    <MoreHorizontal className='w-5 h-5' />
-                  </button>
+                  <div className="flex items-center justify-end gap-3">
+                    <button
+                      onClick={() => navigate(`/admin/jobs/${job._id}`)}
+                      className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-100 hover:bg-blue-100 rounded-md transition-colors"
+                    >
+                      <Edit className="w-4 h-4" /> Edit
+                    </button>
+                    <button
+                      className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 rounded-md transition-colors"
+                    >
+                      <Eye className="w-4 h-4" /> Applicants
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))
