@@ -53,7 +53,7 @@ const AdminJobsTable = () => {
                     >
                       <Edit className="w-4 h-4" /> Edit
                     </button>
-                    <button
+                    <button onClick={()=>navigate(`/admin/jobs/${job._id}/applicants`)}
                       className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 rounded-md transition-colors"
                     >
                       <Eye className="w-4 h-4" /> Applicants

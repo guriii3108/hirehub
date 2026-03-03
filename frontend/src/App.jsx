@@ -12,6 +12,7 @@ import PostJob from './components/Admin/PostJob.jsx'
 import CreateCompany from './components/Admin/CreateCompany.jsx'
 import CompanyDetail from './components/Admin/CompanyDetail.jsx'
 import AdminJobs from './components/Admin/AdminJobs.jsx'
+import Applicants from './components/Admin/Applicants.jsx'
 
 
 const App = () => {
@@ -51,10 +52,6 @@ const App = () => {
       element: <Companies />
     },
     {
-      path: '/admin/post-job',
-      element: <PostJob />
-    },
-    {
       path: "/admin/companies/create-company",
       element: <CreateCompany />
     },
@@ -63,8 +60,16 @@ const App = () => {
       element: <CompanyDetail />
     },
     {
+      path: '/admin/post-job',
+      element: <PostJob />
+    },
+    {
       path: "/admin/jobs",
       element: <AdminJobs />
+    },
+    {
+      path: "/admin/jobs/:jobId/applicants",
+      element: <Applicants />
     }
   ])
   return (
