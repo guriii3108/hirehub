@@ -89,6 +89,9 @@ export const getApplicants = async(req,res)=>{
       options:{sort:{createdAt:-1}},
       populate:{
         path:"applicant",
+        populate:{
+          path:"profile", //nested population 
+        }
       }
     })
 

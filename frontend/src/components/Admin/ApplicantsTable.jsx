@@ -35,9 +35,9 @@ const ApplicantsTable = () => {
                 </td>
               </tr>
             ) : (
-              applicants?.map((applicant, index) =>
+              applicants?.map((applicant) =>
                 (
-                  <tr key={index} className='hover:bg-gray-50/50 transition-colors group'>
+                  <tr key={applicant?._id} className='hover:bg-gray-50/50 transition-colors group'>
                     {/* Applicant Name & Location */}
                     <td className='px-6 py-4'>
                       <div className="flex flex-col gap-1">
@@ -50,31 +50,32 @@ const ApplicantsTable = () => {
                       <div className="flex flex-col gap-1.5 text-gray-600">
                         <span className="flex items-center gap-2 text-sm">
                           <Mail className="w-3.5 h-3.5 text-gray-400" />
-                          [EMAIL_ADDRESS]
+                          {applicant?.applicant?.email}
                         </span>
                         <span className="flex items-center gap-2 text-sm">
                           <Phone className="w-3.5 h-3.5 text-gray-400" />
-                          (+1) 123-456-7890
+                          {applicant?.applicant?.phoneNumber}
                         </span>
                       </div>
                     </td>
 
                     {/* Resume Link */}
-                    <td className='px-6 py-4'>
-                      <a
-                        href="#"
+                    <td className='px-6 py-4'>{applicant?.applicant?.profile?.resume ? 
+                    <a
+                        href={applicant?.applicant?.profile?.resume}
                         target="_blank"
                         rel="noreferrer"
                         className="inline-flex items-center gap-1.5 font-medium text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-full transition-colors"
                       >
                         <FileText className="w-4 h-4" />
-                        View Resume
-                      </a>
+                        {applicant.applicant?.profile?.resumeOriginalName || "View Resume"}
+                      </a> : <span className="text-gray-400 px-3 py-1.5 rounded-full">NA</span> }
+                      
                     </td>
 
                     {/* Date Applied */}
                     <td className='px-6 py-4 text-gray-600'>
-                      15 July 2024
+                      {applicant?.createdAt?.split("T")[0]}
                     </td>
 
                     {/* Action Buttons */}
