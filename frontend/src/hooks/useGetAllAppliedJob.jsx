@@ -20,8 +20,8 @@ const useGetAllAppliedJob = () => {
         })
         if (response?.data?.success) {
           showSuccess(response?.data?.message)
-          // dispatch(setAppliedJobs(response?.data?.data))
-          console.log(response?.data)
+          dispatch(setAppliedJobs(response?.data?.data))
+          // console.log(response?.data?.data)
         }
       } catch (error) {
         showError(error?.response?.data?.message || "Failed to fetch applied jobs")
@@ -36,4 +36,4 @@ const useGetAllAppliedJob = () => {
 
 
 
-export default useGetAllAppliedJob
+export default useGetAllAppliedJob;

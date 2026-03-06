@@ -10,11 +10,15 @@ import {
   Upload
 } from 'lucide-react'
 import UpdateProfileDialouge from '../components/UpdateProfileDialouge'
+import useGetAllAppliedJob from '../hooks/useGetAllAppliedJob.jsx'
 
 const Profile = () => {
+  useGetAllAppliedJob()
   const { user } = useSelector((store) => store.auth);
   const [activeTab, setActiveTab] = useState('overview');
   const [isEditing, setIsEditing] = useState(false);
+  const { appliedJobs } = useSelector((store) => store.job);
+  console.log(appliedJobs)
 
   // Placeholder data tailored for a job portal
   const skills = [
@@ -25,47 +29,12 @@ const Profile = () => {
     { name: "TypeScript", level: "Advanced" }
   ];
 
-  const applications = [
-    {
-      id: 1,
-      company: "Google",
-      role: "Frontend Engineer",
-      date: "2024-02-15",
-      status: "Interview",
-      logo: "https://www.logo.wine/a/logo/Google/Google-Logo.wine.svg"
-    },
-    {
-      id: 2,
-      company: "Microsoft",
-      role: "Full Stack Developer",
-      date: "2024-02-10",
-      status: "Pending",
-      logo: "https://www.logo.wine/a/logo/Microsoft/Microsoft-Logo.wine.svg"
-    },
-    {
-      id: 3,
-      company: "Netflix",
-      role: "UI Engineer",
-      date: "2024-02-05",
-      status: "Rejected",
-      logo: "https://www.logo.wine/a/logo/Netflix/Netflix-Logo.wine.svg"
-    },
-    {
-      id: 4,
-      company: "Spotify",
-      role: "Web Developer",
-      date: "2024-01-28",
-      status: "Accepted",
-      logo: "https://www.logo.wine/a/logo/Spotify/Spotify-Logo.wine.svg"
-    },
-  ];
-
   const getStatusStyle = (status) => {
     switch (status) {
-      case 'Interview': return 'bg-blue-50 text-blue-700 ring-blue-700/10';
-      case 'Pending': return 'bg-yellow-50 text-yellow-700 ring-yellow-600/20';
-      case 'Rejected': return 'bg-red-50 text-red-700 ring-red-600/10';
-      case 'Accepted': return 'bg-green-50 text-green-700 ring-green-600/20';
+      case 'interview': return 'bg-blue-50 text-blue-700 ring-blue-700/10';
+      case 'pending': return 'bg-yellow-50 text-yellow-700 ring-yellow-600/20';
+      case 'rejected': return 'bg-red-50 text-red-700 ring-red-600/10';
+      case 'accepted': return 'bg-green-50 text-green-700 ring-green-600/20';
       default: return 'bg-gray-50 text-gray-600 ring-gray-500/10';
     }
   };
@@ -125,46 +94,46 @@ const Profile = () => {
             {/* Resume Widget */}
             {user?.profile?.resume ? (
               <div className='bg-white rounded-2xl shadow-sm border border-gray-100 p-6'>
-              <h3 className='font-bold text-gray-900 mb-4 flex items-center gap-2'>
-                <FileText className='text-blue-600' size={20} />
-                Resume
-              </h3>
-              <div className='p-4 border border-gray-200 rounded-xl bg-gray-50/50'>
-                <div className='flex items-center justify-between mb-2'>
-                  <span className='font-medium text-sm text-gray-700'>{user?.profile?.resumeOriginalName}</span>
-                  <span className='text-xs text-green-600 font-medium px-2 py-0.5 bg-green-50 rounded-full'>Active</span>
-                </div>
-                <p className='text-xs text-gray-500 mb-4'>Last updated: 2 days ago</p>
-                <div className='flex gap-2'>
-                  <a target='_blank' href={user?.profile?.resume} className='flex-1 bg-white border border-gray-200 text-gray-700 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2'>
-                    <ExternalLink size={14} /> View
-                  </a>
-                  <button className='flex-1 bg-blue-600 text-white py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2'>
-                    <Download size={14} /> Download
-                  </button>
+                <h3 className='font-bold text-gray-900 mb-4 flex items-center gap-2'>
+                  <FileText className='text-blue-600' size={20} />
+                  Resume
+                </h3>
+                <div className='p-4 border border-gray-200 rounded-xl bg-gray-50/50'>
+                  <div className='flex items-center justify-between mb-2'>
+                    <span className='font-medium text-sm text-gray-700'>{user?.profile?.resumeOriginalName}</span>
+                    <span className='text-xs text-green-600 font-medium px-2 py-0.5 bg-green-50 rounded-full'>Active</span>
+                  </div>
+                  <p className='text-xs text-gray-500 mb-4'>Last updated: {user?.profile?.updatedAt.slice(0, 10)}</p>
+                  <div className='flex gap-2'>
+                    <a target='_blank' href={user?.profile?.resume} className='flex-1 bg-white border border-gray-200 text-gray-700 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2'>
+                      <ExternalLink size={14} /> View
+                    </a>
+                    <button className='flex-1 bg-blue-600 text-white py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2'>
+                      <Download size={14} /> Download
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
             ) : (
               <div className='bg-white rounded-2xl shadow-sm border border-gray-100 p-6'>
-              <h3 className='font-bold text-gray-900 mb-4 flex items-center gap-2'>
-                <FileText className='text-blue-600' size={20} />
-                Resume
-              </h3>
-              <div className='p-4 border border-gray-200 rounded-xl bg-gray-50/50'>
-                <div className='flex items-center justify-between mb-2'>
-                  <span className='font-medium text-sm text-gray-700'>No Resume Uploaded</span>
-                </div>
-                <p className='text-xs text-gray-500 mb-4'>Upload your resume to get started</p>
-                <div className='flex gap-2'>
-                  <button className='flex-1 bg-blue-600 text-white py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2'>
-                    <Upload size={14} /> Upload
-                  </button>
+                <h3 className='font-bold text-gray-900 mb-4 flex items-center gap-2'>
+                  <FileText className='text-blue-600' size={20} />
+                  Resume
+                </h3>
+                <div className='p-4 border border-gray-200 rounded-xl bg-gray-50/50'>
+                  <div className='flex items-center justify-between mb-2'>
+                    <span className='font-medium text-sm text-gray-700'>No Resume Uploaded</span>
+                  </div>
+                  <p className='text-xs text-gray-500 mb-4'>Upload your resume to get started</p>
+                  <div className='flex gap-2'>
+                    <button className='flex-1 bg-blue-600 text-white py-1.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2'>
+                      <Upload size={14} /> Upload
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
             )}
-            
+
 
             {/* Skills Widget */}
             <div className='bg-white rounded-2xl shadow-sm border border-gray-100 p-6'>
@@ -173,7 +142,7 @@ const Profile = () => {
                 <button className='text-gray-400 hover:text-black'><Edit3 size={16} /></button>
               </div>
               <div className='flex flex-wrap gap-2'>
-                { user?.profile?.skills?.length === 0 ? (
+                {user?.profile?.skills?.length === 0 ? (
                   <span className='px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-200 transition-colors cursor-default'>
                     No Skills Added
                   </span>
@@ -195,15 +164,15 @@ const Profile = () => {
             <div className='grid grid-cols-3 gap-4'>
               <div className='bg-white p-5 rounded-2xl border border-gray-100 shadow-sm'>
                 <p className='text-gray-500 text-sm font-medium'>Total Applications</p>
-                <p className='text-3xl font-bold text-gray-900 mt-2'>14</p>
+                <p className='text-3xl font-bold text-gray-900 mt-2'>{appliedJobs.length}</p>
               </div>
               <div className='bg-white p-5 rounded-2xl border border-gray-100 shadow-sm'>
                 <p className='text-gray-500 text-sm font-medium'>Interviews Scheduled</p>
-                <p className='text-3xl font-bold text-gray-900 mt-2'>03</p>
+                <p className='text-3xl font-bold text-gray-900 mt-2'>{appliedJobs.filter((item) => item?.status === "interview").length}</p>
               </div>
               <div className='bg-white p-5 rounded-2xl border border-gray-100 shadow-sm'>
-                <p className='text-gray-500 text-sm font-medium'>Profile Views</p>
-                <p className='text-3xl font-bold text-gray-900 mt-2'>128</p>
+                <p className='text-gray-500 text-sm font-medium'>Rejected Applications</p>
+                <p className='text-3xl font-bold text-gray-900 mt-2'>{appliedJobs.filter((item) => item?.status === "rejected").length}</p>
               </div>
             </div>
 
@@ -215,9 +184,9 @@ const Profile = () => {
                   <button className={`p-2 rounded-lg ${activeTab === 'overview' ? 'bg-gray-100 text-black' : 'text-gray-400'}`}>
                     <List size={20} />
                   </button>
-                  <button className={`p-2 rounded-lg ${activeTab === 'grid' ? 'bg-gray-100 text-black' : 'text-gray-400'}`}>
+                  {/* <button className={`p-2 rounded-lg ${activeTab === 'grid' ? 'bg-gray-100 text-black' : 'text-gray-400'}`}>
                     <Grid size={20} />
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
@@ -232,21 +201,21 @@ const Profile = () => {
                     </tr>
                   </thead>
                   <tbody className='divide-y divide-gray-100'>
-                    {applications.map((app) => (
-                      <tr key={app.id} className='hover:bg-gray-50/50 transition-colors group cursor-pointer'>
+                    {appliedJobs?.length > 0 && appliedJobs.map((item) => (
+                      <tr key={item?._id} className='hover:bg-gray-50/50 transition-colors group cursor-pointer'>
                         <td className='py-4 px-6'>
                           <div className='flex items-center gap-3'>
                             <div className='w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center p-2 border border-gray-100'>
-                              <img src={app.logo} alt={app.company} className='w-full h-full object-contain' />
+                              <img src={item?.company?.logo} alt={item?.company?.name} className='w-full h-full object-contain' />
                             </div>
-                            <span className='font-medium text-gray-900'>{app.company}</span>
+                            <span className='font-medium text-gray-900'>{item?.company?.name}</span>
                           </div>
                         </td>
-                        <td className='py-4 px-6 text-sm text-gray-600'>{app.role}</td>
-                        <td className='py-4 px-6 text-sm text-gray-500'>{app.date}</td>
+                        <td className='py-4 px-6 text-sm text-gray-600'>{item?.job?.title}</td>
+                        <td className='py-4 px-6 text-sm text-gray-500'>{item?.createdAt.split("T")[0]}</td>
                         <td className='py-4 px-6'>
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ring-1 ring-inset ${getStatusStyle(app.status)}`}>
-                            {app.status}
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ring-1 ring-inset ${getStatusStyle(item?.status)}`}>
+                            {item?.status.toUpperCase().slice(0, 1) + item?.status.slice(1)}
                           </span>
                         </td>
                       </tr>
